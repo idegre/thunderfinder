@@ -1,10 +1,7 @@
-const functions = require('firebase-functions');
-
-const admin = require('firebase-admin');
-admin.initializeApp(functions.config().firebase);
-
 var geodist = require('geodist')//https://www.npmjs.com/package/geodist
 var Math = require( 'math');
+
+var LatLon = require('geodesy').LatLonSpherical;
 
 function intersection(x0, y0, r0, x1, y1, r1) {//thanks to 01AutoMonkey (heavily modified by me)
         var a, dx, dy, d, h, rx, ry;
@@ -92,59 +89,31 @@ function triangulate(pos,distance){//aca va la funcion de multilateration...
 	}
 }
 
-var currentSightings=[];//my list of raw data before it gets old (after it got old it gets deleted(or sent somewhere else))
-var currentThunders=[];//this are not-yet-old thunders right before getting saved on the procesed thunders database
+var thunderpos={
+lat:-38.015005699999996,
+lon:-57.581600300000005};
 
-const thunderRef = functions.database.ref('thunders')
+trueno=new LatLon(thunderpos.lat,thunderpos.lon);
 
-exports.sightingMatcher=functions.database.ref('rawData')//esto va a tener que ser una entry table que se fije si es nuevo y dsps ahaga lo demas
-    .onWrite(event => {
-    	console.log('triggered');
-    	event.data.forEach(deltaSnap =>{
-    		if(deltaSnap.changed()){
-    			let sighting = deltaSnap.val();
-    			console.log('new sighting',sighting);
+var userpos=[];
+var distance=[];
 
-    			let pos= sighting.pos;
-    			let createdAt = sighting.createdAt;
-    			let distace=(sighting.timedif)*0.343;
-    			let timedif=sighting.timedif;
-    			let serverKey = deltaSnap.key;
+for(i=0;i<2;i++){
+	let angle=Math.random()*360;
+	let dist=Math.random()*9000;
+	userpos.push(trueno.destinationPoint(distance, angle));
+	distance.push(dist);
+	console.log('sim user:',i,'is in',userpos[i].lat,'<>',userpos[i].lon,'/',distance[i],'/',angle);
+	if(isNaN(userpos[i].lat)){i--;dist=5000;};
+}
 
-    			currentSightings.push({pos:pos,createdAt:createdAt,distace:distace,key:serverKey,timedif:sighting.timedif});//lo agrego al array
-				//rawDataRef.child(serverKey).remove();//los saco de la mesade entrada
-				//console.log('sighting removed from entry table');
-				/*dynaTimer = serverKey + `=setTimeout(()=>{
-				if(currentSightings.splice(currentSightings.indexOf({` + serverKey + `}),1)==[]){
-					console.log('no se encontro par y no se puedo eliminar` + serverKey +`')
-				} else{console.log('no se encontro par y se elimino el elemento `+ serverKey +`)}
-				}`+',4);';*///creo un timer con su ID unico de 4 segundos(ese es el timepo que tiene para encontrar otro sighting)
-	    		//eval(dynaTimer);//todo lo anterios es una string y aca la ejecuto, entonces me quedan los server keys como variables metidos ahi
-	    		//dynaTimer=null;//devuelvo dyantimer a null para volver a usarla//all of this useless
-	    		let timer=setTimeout(()=>{
-	    				if(currentSightings.splice(currentSightings.indexOf({key:serverKey}),1)==[]){
-							console.log('no se encontro par y no se puedo eliminar', serverKey)
-						}else{console.log('no se encontro par y se elimino el elemento', serverKey)}
-	    		},60000);
-	    		let matches=[];
-    			currentSightings.map(el=>{//ahora le busco un par
-    				
-    				console.log('distacia:',geodist(el.pos,pos,{exact: true, unit: 'km'}),'   tiempo:',(el.createdAt-el.timedif)-(sighting.createdAt-sighting.timedif));
 
-	    			if(
-	    				(geodist(el.pos,pos,{exact: true, unit: 'km'})<20)&&                                     /*la distacia tiene que ser menor a 10km*/
-	    				Math.abs((el.createdAt-el.timedif)-(sighting.createdAt-sighting.timedif))<1500)
-	    				{                                                                                        /*y la diferencia entre el sighting del flash menor a 1.5 seg*///tener el cuenta que el flashtime se estima con el tiempo del servidor para sincronizar
-	    				matches.push(el);//lo agrego a la lista de matches
-	    				console.log('agregado a la lista de matches',matches.length);
-	    				if(matches.length==2){//cuando tengo 2 matches validos trato de trangular(es == a 2 para qeu si hay mas de 3 sightings no hace dobles truenos)
-	    					console.log('triangulando');
-	    					let thunderpos=triangulate([pos,matches[0].pos,matches[1].pos],[distace+10,matches[0].distace+10,matches[1].distace+10]);
-	    					console.log(thunderpos);
-	    					admin.database().ref('/thunders').push({pos:thunderpos});
-	    				}
-	    			}
-	    		});
-    		} else {/*lo que haria con los viejos(?)*/}
-    	});
-});
+userpos.push({lat:-37.96565981070231,lon:-57.6555144821553});
+distance.push(8489.068344907279);
+console.log('sim user:',2,'is in',userpos[2].lat,'<>',userpos[2].lon,'/',distance[2]);
+
+
+console.log('triangulando');
+let test=triangulate([userpos[0],userpos[1],userpos[2]],[distance[0],distance[1],distance[2]]);
+console.log(test);
+process.exit(0);

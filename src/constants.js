@@ -1,2 +1,3 @@
 export const CURRENT_THUNDER='CURRENT_THUNDER';
 export const INITIAL_PRESS='INITIAL_PRESS';
+export const CHANGE_POS='CHANGE_POS';

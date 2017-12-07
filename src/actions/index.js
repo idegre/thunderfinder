@@ -1,4 +1,4 @@
-import {POSITION, CURRENT_THUNDER, INITIAL_PRESS} from '../constants';//importo la variables
+import {POSITION, CURRENT_THUNDER, INITIAL_PRESS,CHANGE_POS} from '../constants';//importo la variables
 
 export const currentThunder=(active,timeDif)=>{
 	const action={
@@ -14,6 +14,14 @@ export const initialPress=(active,timeDif)=>{
 		type:INITIAL_PRESS,
 		active,
 		timeDif
+	}
+	return action;
+}
+
+export const changePos=(position)=>{
+	const action={
+		type:CHANGE_POS,
+		position
 	}
 	return action;
 }

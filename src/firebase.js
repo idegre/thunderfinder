@@ -10,4 +10,4 @@ const config = {
   };
  export const firebaseApp=firebase.initializeApp(config);
  export const rawDataRef =firebase.database().ref('rawData');
- export const ThundersRef=firebase.database().ref('Thunders');
+ export const ThundersRef=firebase.database().ref('thunders');

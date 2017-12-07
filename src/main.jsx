@@ -3,6 +3,7 @@ import './main.css';
 import Sidebar from './components/sidebar'
 import Mapcomp from './components/map'
 import {geolocated} from 'react-geolocated';
+import {Link} from 'react-router-dom';
 
 class Main extends Component{
 	chechPositionAvalavility(){
@@ -25,11 +26,15 @@ class Main extends Component{
 	render(){
 		return(
 			<div>
-			<div>v0.3 ALPHA - only basic functionality has been implemented (also: bugs)</div>
+			<div>v0.5 BETA - only basic functionality has been implemented (also: bugs)</div>
 			<div className="topbar">
-				<h1>thunder finder</h1>
+				<h1>Thunderfinder</h1>
 			</div>
 			{this.chechPositionAvalavility()}
+			<div className="bottombar">
+				<div className="bottomabout"><Link to={'/About'}>about</Link></div>
+				<div className="bottomcontact"><Link to={'/About'}>contact</Link></div>
+			</div>
 		</div>
 		)
 	}

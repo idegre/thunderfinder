@@ -8,7 +8,8 @@ import {bindActionCreators} from 'redux';
 class BotonPrincipal extends Component{
 	constructor(props){
 	super(props);
-	this.state={btnColor:'#D7C738',
+	this.state={
+		btnColor:'#D7C738',
 		flash:0,
 		flashTime:null,};
 	}

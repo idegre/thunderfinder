@@ -1,9 +1,15 @@
-import {INITIAL_PRESS, CURRENT_THUNDER} from '../constants';//importo la variables
+import {INITIAL_PRESS, CURRENT_THUNDER, CHANGE_POS} from '../constants';//importo la variables
 
 const thunder =(action)=>{
 	return{
 		active:action.active,
 		radious:action.timeDif*0.343,
+	}
+}
+
+const newpos=(action)=>{
+	return{
+		pos:action
 	}
 }
 
@@ -16,6 +22,11 @@ const reducers=(state={},action)=>{
 		case INITIAL_PRESS:
 			console.log('initial press', action);
 			return thunder(action);
+
+		case CHANGE_POS:
+			console.log('changin position', action);
+			return newpos(action);
+
 		default:
 			return state;
 	}

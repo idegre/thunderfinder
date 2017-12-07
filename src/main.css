@@ -35,11 +35,19 @@
   	height: 5%;
  	width: 100%;
 }
-.bottomthing{
+.bottomabout{
 	color: #A4A4A4;
 	display: inline-block;
 	position:relative;
+	left:30%;
 	top:30%;/*no me gusta mucho solo fucniona en esta res*/
+}
+.bottomcontact{
+	color: #A4A4A4;
+	display: inline-block;
+	position:relative;
+	left:70%;
+	top:30%;/*no me gusta mucho solo fucniona en esta res*/	
 }
 .mapa{
 	border:0px;
